@@ -3,6 +3,7 @@ import DashboardLayout from '../components/Layout/DashboardLayout';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import apiClient from '../services/apiClient';
 import ticketService from '../services/ticketService';
+import authService from '../services/authService';
 import { toast } from 'react-toastify';
 
 const ROLE_COLORS = { admin: '#7c3aed', clinician: '#0f4c81', nurse: '#0f766e' };
@@ -14,6 +15,8 @@ const Admin = () => {
   const [tab, setTab] = useState('tickets');
   const [loading, setLoading] = useState(true);
   const [updatingUser, setUpdatingUser] = useState(null);
+  const [createForm, setCreateForm] = useState({ fullName: '', username: '', email: '', password: '', role: 'clinician', department: '' });
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -53,6 +56,24 @@ const Admin = () => {
     } catch { toast.error('Failed to update ticket'); }
   };
 
+  const handleCreateStaff = async (e) => {
+    e.preventDefault();
+    setCreating(true);
+    try {
+      await authService.createStaffUser(createForm);
+      toast.success(`Staff account created for ${createForm.fullName}`);
+      setCreateForm({ fullName: '', username: '', email: '', password: '', role: 'clinician', department: '' });
+      const u = await apiClient.get('/api/auth/users');
+      setUsers(u.data.users || []);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to create staff account');
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const setC = (k, v) => setCreateForm(p => ({ ...p, [k]: v }));
+
   const STATUS_COLOR = { open: '#ef4444', 'in-progress': '#f59e0b', resolved: '#10b981', closed: '#9ca3af' };
   const PRIORITY_COLOR = { high: '#ef4444', medium: '#f59e0b', low: '#10b981' };
 
@@ -82,7 +103,7 @@ const Admin = () => {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.25rem', background: '#f3f8fb', padding: '4px', borderRadius: '10px', marginBottom: '1.5rem', width: 'fit-content' }}>
-        {[['tickets', 'Support Tickets'], ['users', 'User Management'], ['system', 'System Info']].map(([t, l]) => (
+        {[['tickets', 'Support Tickets'], ['users', 'User Management'], ['create', 'Create Staff'], ['system', 'System Info']].map(([t, l]) => (
           <button key={t} onClick={() => setTab(t)} style={{ padding: '0.6rem 1.25rem', borderRadius: '8px', border: 'none', fontWeight: 600, fontSize: '0.875rem', cursor: 'pointer', transition: 'all 0.2s', background: tab === t ? 'white' : 'transparent', color: tab === t ? '#0f4c81' : '#6b7280', boxShadow: tab === t ? '0 2px 8px rgba(0,0,0,0.08)' : 'none' }}>
             {l}
           </button>
@@ -139,7 +160,7 @@ const Admin = () => {
 
           {tab === 'users' && (
             <div className="content-card" style={{ overflowX: 'auto' }}>
-              {users.length === 0 ? (
+              {users.filter(u => u.role !== 'patient').length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
                   <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>👥</div>
                   <div>No users found</div>
@@ -150,7 +171,7 @@ const Admin = () => {
                     <tr><th>User</th><th>Username</th><th>Role</th><th>Department</th><th>Joined</th><th>Status</th><th>Actions</th></tr>
                   </thead>
                   <tbody>
-                    {users.map(u => (
+                    {users.filter(u => u.role !== 'patient').map(u => (
                       <tr key={u._id}>
                         <td>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -197,6 +218,50 @@ const Admin = () => {
                   </tbody>
                 </table>
               )}
+            </div>
+          )}
+
+          {tab === 'create' && (
+            <div className="content-card" style={{ maxWidth: '540px' }}>
+              <h6 style={{ color: '#0f2840', fontWeight: 700, marginBottom: '0.4rem' }}>Create Clinical Staff Account</h6>
+              <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+                Staff accounts (clinicians, nurses, admins) can only be created here. They cannot self-register.
+              </p>
+              <form onSubmit={handleCreateStaff}>
+                <div className="row g-3">
+                  <div className="col-12">
+                    <label className="form-label">Full Name</label>
+                    <input type="text" className="form-control" placeholder="Dr. Jane Smith" value={createForm.fullName} onChange={e => setC('fullName', e.target.value)} required />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label">Username</label>
+                    <input type="text" className="form-control" placeholder="jsmith" value={createForm.username} onChange={e => setC('username', e.target.value)} required minLength={3} />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label">Role</label>
+                    <select className="form-select" value={createForm.role} onChange={e => setC('role', e.target.value)}>
+                      <option value="clinician">Clinician</option>
+                      <option value="nurse">Nurse</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                  <div className="col-12">
+                    <label className="form-label">Email Address</label>
+                    <input type="email" className="form-control" placeholder="doctor@hospital.com" value={createForm.email} onChange={e => setC('email', e.target.value)} required />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label">Temporary Password</label>
+                    <input type="password" className="form-control" placeholder="Min. 6 characters" value={createForm.password} onChange={e => setC('password', e.target.value)} required minLength={6} />
+                  </div>
+                  <div className="col-6">
+                    <label className="form-label">Department (optional)</label>
+                    <input type="text" className="form-control" placeholder="Cardiology" value={createForm.department} onChange={e => setC('department', e.target.value)} />
+                  </div>
+                </div>
+                <button type="submit" className="btn btn-primary-brand w-100 mt-4" disabled={creating} style={{ borderRadius: '10px', padding: '0.85rem' }}>
+                  {creating ? 'Creating account…' : 'Create Staff Account →'}
+                </button>
+              </form>
             </div>
           )}
 
