@@ -1,0 +1,25 @@
+{
+  "features": ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal"],
+  "feature_descriptions": {
+    "age": "Age in years",
+    "sex": "Sex (0=Female, 1=Male)",
+    "cp": "Chest pain type (0=typical angina, 1=atypical angina, 2=non-anginal, 3=asymptomatic)",
+    "trestbps": "Resting blood pressure (mmHg)",
+    "chol": "Serum cholesterol (mg/dl)",
+    "fbs": "Fasting blood sugar >120 mg/dl (0=No, 1=Yes)",
+    "restecg": "Resting ECG results (0=normal, 1=ST-T abnormality, 2=LV hypertrophy)",
+    "thalach": "Maximum heart rate achieved (bpm)",
+    "exang": "Exercise induced angina (0=No, 1=Yes)",
+    "oldpeak": "ST depression induced by exercise relative to rest",
+    "slope": "Slope of peak exercise ST segment (0=upsloping, 1=flat, 2=downsloping)",
+    "ca": "Number of major vessels colored by fluoroscopy (0-3)",
+    "thal": "Thalassemia type (1=normal, 2=fixed defect, 3=reversible defect)"
+  },
+  "model_type": "LogisticRegression_C1",
+  "model_version": "2.0",
+  "trained_on": "UCI Heart Disease Dataset (303 samples)",
+  "target": "Heart Disease (0=absent, 1=present)",
+  "accuracy": "0.8033",
+  "roc_auc": "0.8690",
+  "mcc": "0.6098"
+}
