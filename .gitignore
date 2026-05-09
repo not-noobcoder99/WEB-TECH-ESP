@@ -1,0 +1,12 @@
+# Editor & tool internals
+.vscode/
+.idea/
+.claude/
+
+# Planning documents
+*.docx
+*.doc
+
+# OS
+.DS_Store
+Thumbs.db
