@@ -62,10 +62,8 @@ temp/
 *.tmp
 *.bak
 
-# Model files (except metadata)
+# Model files (large trained models — exclude .pkl but keep .joblib for deployment)
 ai-service/model/*.pkl
-ai-service/model/*.joblib
-!ai-service/model/feature_columns.json
 
 # Database backups
 *.sql

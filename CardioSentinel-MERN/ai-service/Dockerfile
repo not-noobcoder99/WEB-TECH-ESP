@@ -21,7 +21,7 @@ EXPOSE 8000
 
 # Environment variables
 ENV FLASK_ENV=production
-ENV FLASK_PORT=8000
+ENV PORT=8000
 
-# Run application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "4", "app:app"]
+# Run application with Gunicorn (shell form so $PORT is expanded at runtime)
+CMD gunicorn --bind 0.0.0.0:$PORT --workers 2 app:app

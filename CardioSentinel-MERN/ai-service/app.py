@@ -58,6 +58,9 @@ def load_model():
         model_loaded = False
 
 
+# Load model at import time so gunicorn workers have it ready
+load_model()
+
 # =====================
 # API ENDPOINTS
 # =====================
@@ -218,8 +221,7 @@ def internal_error(error):
 
 if __name__ == '__main__':
     print("\nCardioSentinel AI Service Starting...\n")
-    load_model()
-    port = int(os.getenv('FLASK_PORT', 8000))
+    port = int(os.getenv('PORT', os.getenv('FLASK_PORT', 8000)))
     env = os.getenv('FLASK_ENV', 'development')
     print(f"Running on http://localhost:{port}")
     app.run(host='0.0.0.0', port=port, debug=(env == 'development'))
