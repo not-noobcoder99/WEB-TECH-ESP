@@ -42,7 +42,7 @@ const Patients = () => {
 
   useEffect(() => { fetchPatients(); }, [fetchPatients]);
 
-  const toggleStatus = async (e, id, currentStatus) => {
+  const toggleStatus = useCallback(async (e, id, currentStatus) => {
     e.stopPropagation();
     const next = currentStatus === 'active' ? 'paused' : 'active';
     try {
@@ -50,7 +50,7 @@ const Patients = () => {
       toast.success(`Patient ${next === 'active' ? 'activated' : 'paused'}`);
       fetchPatients();
     } catch { toast.error('Failed to update status'); }
-  };
+  }, [fetchPatients]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -130,7 +130,7 @@ const Patients = () => {
         );
       },
     },
-  ], []);
+  ], [toggleStatus]);
 
   const table = useReactTable({
     data: patients,

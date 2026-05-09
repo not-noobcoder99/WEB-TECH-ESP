@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, Cell, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -52,14 +52,14 @@ const PatientDetail = () => {
     load();
   }, [id]);
 
-  const fetchNotes = async () => {
+  const fetchNotes = useCallback(async () => {
     try {
       const res = await apiClient.get(`/api/patients/${id}/notes`);
       setNotes(res.data || []);
     } catch {}
-  };
+  }, [id]);
 
-  useEffect(() => { if (id) fetchNotes(); }, [id]);
+  useEffect(() => { fetchNotes(); }, [fetchNotes]);
 
   const handleAddNote = async () => {
     if (!newNote.trim()) return;
