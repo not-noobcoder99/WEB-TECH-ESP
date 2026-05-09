@@ -15,6 +15,7 @@ import PatientDetail from './pages/PatientDetail';
 import Alerts from './pages/Alerts';
 import Analytics from './pages/Analytics';
 import Admin from './pages/Admin';
+import PatientPortal from './pages/PatientPortal';
 
 const App = () => (
   <Router>
@@ -35,6 +36,7 @@ const App = () => (
       <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
       <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
       <Route path="/admin" element={<ProtectedRoute roles={['admin']}><Admin /></ProtectedRoute>} />
+      <Route path="/patient-portal" element={<ProtectedRoute roles={['patient']}><PatientPortal /></ProtectedRoute>} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

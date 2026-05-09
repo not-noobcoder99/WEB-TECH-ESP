@@ -8,6 +8,12 @@ const ProtectedRoute = ({ children, roles }) => {
 
   if (loading) return <LoadingSpinner fullPage />;
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  // Patients must stay in their own portal
+  if (user?.role === 'patient' && (!roles || !roles.includes('patient'))) {
+    return <Navigate to="/patient-portal" replace />;
+  }
+
   if (roles && !roles.includes(user?.role)) return <Navigate to="/dashboard" replace />;
 
   return children;
