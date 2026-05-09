@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useReactTable, getCoreRowModel, getSortedRowModel, flexRender } from '@tanstack/react-table';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 import RiskBadge from '../components/UI/RiskBadge';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import patientService from '../services/patientService';
 import apiClient from '../services/apiClient';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const INITIAL_FORM = { name: '', age: '', sex: '1', email: '', phone: '', cp: '', trestbps: '', chol: '', fbs: '0', restecg: '0', thalach: '', exang: '0', oldpeak: '', slope: '1', ca: '0', thal: '2' };
 
@@ -21,6 +22,7 @@ const Patients = () => {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(INITIAL_FORM);
   const [submitting, setSubmitting] = useState(false);
+  const [sorting, setSorting] = useState([]);
   const navigate = useNavigate();
 
   const fetchPatients = useCallback(async () => {
@@ -63,6 +65,81 @@ const Patients = () => {
     } catch (err) { toast.error(err.response?.data?.message || 'Failed to create patient'); }
     finally { setSubmitting(false); }
   };
+
+  const columns = useMemo(() => [
+    {
+      accessorKey: 'patientId',
+      header: 'Patient ID',
+      cell: ({ getValue }) => (
+        <code style={{ background: '#f3f8fb', padding: '0.2rem 0.5rem', borderRadius: '4px', color: '#0f4c81', fontWeight: 700, fontSize: '0.8rem' }}>{getValue()}</code>
+      ),
+    },
+    {
+      accessorKey: 'name',
+      header: 'Name',
+      cell: ({ getValue }) => <span style={{ fontWeight: 600, color: '#0f2840' }}>{getValue()}</span>,
+    },
+    {
+      id: 'ageSex',
+      header: 'Age / Sex',
+      accessorFn: row => row.age,
+      cell: ({ row }) => <span style={{ color: '#6b7280' }}>{row.original.age}y / {row.original.sex === 1 ? 'Male' : 'Female'}</span>,
+    },
+    {
+      accessorKey: 'riskLevel',
+      header: 'Risk Level',
+      cell: ({ getValue }) => <RiskBadge level={getValue()} size="sm" />,
+    },
+    {
+      accessorKey: 'status',
+      header: 'Status',
+      cell: ({ getValue }) => {
+        const s = getValue();
+        return <span style={{ fontSize: '0.8rem', fontWeight: 600, padding: '0.2rem 0.6rem', borderRadius: '6px', background: s === 'active' ? '#d1fae5' : '#f3f4f6', color: s === 'active' ? '#065f46' : '#6b7280' }}>{s}</span>;
+      },
+    },
+    {
+      accessorKey: 'lastRiskScore',
+      header: 'Last Risk Score',
+      cell: ({ getValue }) => {
+        const v = getValue();
+        return <span style={{ fontWeight: 700, color: v >= 0.7 ? '#dc2626' : v >= 0.4 ? '#f59e0b' : '#10b981' }}>{v != null ? (v * 100).toFixed(1) + '%' : '—'}</span>;
+      },
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Enrolled',
+      cell: ({ getValue }) => <span style={{ color: '#9ca3af', fontSize: '0.8rem' }}>{new Date(getValue()).toLocaleDateString()}</span>,
+    },
+    {
+      id: 'actions',
+      header: '',
+      enableSorting: false,
+      cell: ({ row }) => {
+        const p = row.original;
+        return (
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <button
+              onClick={e => { e.stopPropagation(); toggleStatus(e, p._id, p.status); }}
+              style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', borderRadius: '5px', border: 'none', background: p.status === 'active' ? '#fef3c7' : '#d1fae5', color: p.status === 'active' ? '#92400e' : '#065f46', fontWeight: 600, cursor: 'pointer' }}
+            >
+              {p.status === 'active' ? 'Pause' : 'Activate'}
+            </button>
+            <Link to={`/patients/${p._id}`} onClick={e => e.stopPropagation()} style={{ color: '#0f4c81', fontWeight: 600, fontSize: '0.8rem', textDecoration: 'none' }}>View →</Link>
+          </div>
+        );
+      },
+    },
+  ], []);
+
+  const table = useReactTable({
+    data: patients,
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
 
   return (
     <DashboardLayout title="Patient Management">
@@ -117,42 +194,29 @@ const Patients = () => {
             <>
               <table className="table data-table mb-0">
                 <thead>
-                  <tr>
-                    <th>Patient ID</th>
-                    <th>Name</th>
-                    <th>Age / Sex</th>
-                    <th>Risk Level</th>
-                    <th>Status</th>
-                    <th>Last Risk Score</th>
-                    <th>Enrolled</th>
-                    <th></th>
-                  </tr>
+                  {table.getHeaderGroups().map(hg => (
+                    <tr key={hg.id}>
+                      {hg.headers.map(header => (
+                        <th
+                          key={header.id}
+                          onClick={header.column.getCanSort() ? header.column.getToggleSortingHandler() : undefined}
+                          style={{ cursor: header.column.getCanSort() ? 'pointer' : 'default', userSelect: 'none', whiteSpace: 'nowrap' }}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {header.column.getIsSorted() === 'asc' && ' ↑'}
+                          {header.column.getIsSorted() === 'desc' && ' ↓'}
+                          {!header.column.getIsSorted() && header.column.getCanSort() && <span style={{ opacity: 0.3 }}> ↕</span>}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
                 </thead>
                 <tbody>
-                  {patients.map(p => (
-                    <tr key={p._id} onClick={() => navigate(`/patients/${p._id}`)} style={{ cursor: 'pointer' }}>
-                      <td><code style={{ background: '#f3f8fb', padding: '0.2rem 0.5rem', borderRadius: '4px', color: '#0f4c81', fontWeight: 700, fontSize: '0.8rem' }}>{p.patientId}</code></td>
-                      <td style={{ fontWeight: 600, color: '#0f2840' }}>{p.name}</td>
-                      <td style={{ color: '#6b7280' }}>{p.age}y / {p.sex === 1 ? 'Male' : 'Female'}</td>
-                      <td><RiskBadge level={p.riskLevel} size="sm" /></td>
-                      <td>
-                        <span style={{ fontSize: '0.8rem', fontWeight: 600, padding: '0.2rem 0.6rem', borderRadius: '6px', background: p.status === 'active' ? '#d1fae5' : '#f3f4f6', color: p.status === 'active' ? '#065f46' : '#6b7280' }}>
-                          {p.status}
-                        </span>
-                      </td>
-                      <td style={{ fontWeight: 700, color: p.lastRiskScore >= 0.7 ? '#dc2626' : p.lastRiskScore >= 0.4 ? '#f59e0b' : '#10b981' }}>
-                        {p.lastRiskScore != null ? (p.lastRiskScore * 100).toFixed(1) + '%' : '—'}
-                      </td>
-                      <td style={{ color: '#9ca3af', fontSize: '0.8rem' }}>{new Date(p.createdAt).toLocaleDateString()}</td>
-                      <td onClick={e => e.stopPropagation()} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                        <button
-                          onClick={e => toggleStatus(e, p._id, p.status)}
-                          style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', borderRadius: '5px', border: 'none', background: p.status === 'active' ? '#fef3c7' : '#d1fae5', color: p.status === 'active' ? '#92400e' : '#065f46', fontWeight: 600, cursor: 'pointer' }}
-                        >
-                          {p.status === 'active' ? 'Pause' : 'Activate'}
-                        </button>
-                        <Link to={`/patients/${p._id}`} style={{ color: '#0f4c81', fontWeight: 600, fontSize: '0.8rem', textDecoration: 'none' }}>View →</Link>
-                      </td>
+                  {table.getRowModel().rows.map(row => (
+                    <tr key={row.id} onClick={() => navigate(`/patients/${row.original._id}`)} style={{ cursor: 'pointer' }}>
+                      {row.getVisibleCells().map(cell => (
+                        <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>

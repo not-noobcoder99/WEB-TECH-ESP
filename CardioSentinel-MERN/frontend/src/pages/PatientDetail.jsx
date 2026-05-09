@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { LineChart, Line, BarChart, Bar, Cell, ReferenceLine, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 import RiskBadge from '../components/UI/RiskBadge';
 import RiskTrendBadge from '../components/UI/RiskTrendBadge';
@@ -8,7 +10,7 @@ import LoadingSpinner from '../components/UI/LoadingSpinner';
 import patientService from '../services/patientService';
 import telemetryService from '../services/telemetryService';
 import apiClient from '../services/apiClient';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -298,12 +300,28 @@ const PatientDetail = () => {
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.75rem' }}>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '0.25rem' }}>Last Risk Score</div>
-              <div style={{ fontSize: '2.25rem', fontWeight: 800, color: patient.lastRiskScore >= 0.7 ? '#dc2626' : patient.lastRiskScore >= 0.4 ? '#f59e0b' : '#10b981' }}>
-                {patient.lastRiskScore != null ? (patient.lastRiskScore * 100).toFixed(1) + '%' : '—'}
+            {patient.lastRiskScore != null ? (
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '0.72rem', color: '#9ca3af', marginBottom: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>AI Risk Score</div>
+                <div style={{ width: 90, height: 90 }}>
+                  <CircularProgressbar
+                    value={patient.lastRiskScore * 100}
+                    text={`${(patient.lastRiskScore * 100).toFixed(0)}%`}
+                    styles={buildStyles({
+                      pathColor: patient.lastRiskScore >= 0.7 ? '#dc2626' : patient.lastRiskScore >= 0.4 ? '#f59e0b' : '#10b981',
+                      textColor: patient.lastRiskScore >= 0.7 ? '#dc2626' : patient.lastRiskScore >= 0.4 ? '#f59e0b' : '#10b981',
+                      trailColor: '#f3f4f6',
+                      textSize: '20px',
+                    })}
+                  />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginBottom: '0.25rem' }}>Last Risk Score</div>
+                <div style={{ fontSize: '2rem', fontWeight: 800, color: '#d1d5db' }}>—</div>
+              </div>
+            )}
             <button onClick={handleExportPDF} style={{ background: '#f3f8fb', color: '#0f4c81', border: '1.5px solid #dbeafe', borderRadius: '10px', padding: '0.5rem 1rem', fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               ↓ Export PDF
             </button>
