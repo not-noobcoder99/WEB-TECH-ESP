@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+﻿import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 import RiskBadge from '../components/UI/RiskBadge';
 import LoadingSpinner from '../components/UI/LoadingSpinner';
 import alertService from '../services/alertService';
 import apiClient from '../services/apiClient';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const TYPE_STYLE = { urgent: 'status-urgent', watchlist: 'status-watchlist', stable: 'status-stable' };
 const STATUS_STYLE = { pending: 'status-watchlist', reviewed: 'status-stable', resolved: 'status-stable' };
@@ -104,7 +104,7 @@ const Alerts = () => {
         <div className="content-card" style={{ overflowX: 'auto' }}>
           {alerts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>âœ…</div>
               <div style={{ fontWeight: 600 }}>No alerts match your filters</div>
             </div>
           ) : (
@@ -117,7 +117,7 @@ const Alerts = () => {
                   {alerts.map(a => (
                     <tr key={a._id}>
                       <td>
-                        <Link to={`/patients/${a.patientId?._id}`} style={{ textDecoration: 'none', color: '#0f2840', fontWeight: 600 }}>{a.patientId?.name || '—'}</Link>
+                        <Link to={`/patients/${a.patientId?._id}`} style={{ textDecoration: 'none', color: '#0f2840', fontWeight: 600 }}>{a.patientId?.name || 'â€”'}</Link>
                         <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>{a.patientId?.patientId}</div>
                       </td>
                       <td><span className={TYPE_STYLE[a.alertType] || 'status-watchlist'}>{a.alertType}</span></td>
@@ -128,11 +128,11 @@ const Alerts = () => {
                             <div style={{ height: '100%', width: `${(a.riskScore || 0) * 100}%`, background: a.riskScore >= 0.7 ? '#ef4444' : a.riskScore >= 0.4 ? '#f59e0b' : '#10b981', borderRadius: '3px' }} />
                           </div>
                           <span style={{ fontWeight: 700, color: a.riskScore >= 0.7 ? '#dc2626' : '#374151', fontSize: '0.85rem' }}>
-                            {a.riskScore ? (a.riskScore * 100).toFixed(1) + '%' : '—'}
+                            {a.riskScore ? (a.riskScore * 100).toFixed(1) + '%' : 'â€”'}
                           </span>
                         </div>
                       </td>
-                      <td style={{ color: '#6b7280', fontSize: '0.85rem' }}>{a.confidence ? (a.confidence * 100).toFixed(1) + '%' : '—'}</td>
+                      <td style={{ color: '#6b7280', fontSize: '0.85rem' }}>{a.confidence ? (a.confidence * 100).toFixed(1) + '%' : 'â€”'}</td>
                       <td><span className={STATUS_STYLE[a.status] || 'status-watchlist'}>{a.status}</span></td>
                       <td style={{ color: '#9ca3af', fontSize: '0.8rem' }}>{new Date(a.createdAt).toLocaleString()}</td>
                       <td>
@@ -169,7 +169,7 @@ const Alerts = () => {
           <div style={{ background: 'white', borderRadius: '20px', maxWidth: '520px', width: '100%', padding: '2rem', boxShadow: '0 24px 64px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h4 style={{ margin: 0, color: '#0f2840' }}>Alert Details</h4>
-              <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#9ca3af' }}>×</button>
+              <button onClick={() => setSelected(null)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: '#9ca3af' }}>Ã—</button>
             </div>
             <div style={{ background: '#fee2e2', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -181,16 +181,16 @@ const Alerts = () => {
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '2rem', fontWeight: 800, color: '#dc2626' }}>{selected.riskScore ? (selected.riskScore * 100).toFixed(1) + '%' : '—'}</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 800, color: '#dc2626' }}>{selected.riskScore ? (selected.riskScore * 100).toFixed(1) + '%' : 'â€”'}</div>
                   <div style={{ fontSize: '0.75rem', color: '#b91c1c' }}>Risk Score</div>
                 </div>
               </div>
             </div>
             {[
               ['Alert Type', selected.alertType],
-              ['Confidence', selected.confidence ? (selected.confidence * 100).toFixed(1) + '%' : '—'],
+              ['Confidence', selected.confidence ? (selected.confidence * 100).toFixed(1) + '%' : 'â€”'],
               ['Status', selected.status],
-              ['Recommendation', selected.recommendation || '—'],
+              ['Recommendation', selected.recommendation || 'â€”'],
               ['Created', new Date(selected.createdAt).toLocaleString()],
             ].map(([k, v]) => (
               <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0', borderBottom: '1px solid #f3f4f6', fontSize: '0.875rem' }}>
@@ -201,7 +201,7 @@ const Alerts = () => {
             {selected.status !== 'resolved' && (
               <div style={{ marginTop: '1.25rem' }}>
                 <label className="form-label">Review Notes</label>
-                <textarea className="form-control" rows={3} value={reviewNotes} onChange={e => setReviewNotes(e.target.value)} placeholder="Add clinical notes…" style={{ marginBottom: '1rem' }} />
+                <textarea className="form-control" rows={3} value={reviewNotes} onChange={e => setReviewNotes(e.target.value)} placeholder="Add clinical notesâ€¦" style={{ marginBottom: '1rem' }} />
                 <div style={{ display: 'flex', gap: '0.75rem' }}>
                   {selected.status === 'pending' && (
                     <button onClick={() => handleStatusUpdate(selected._id, 'reviewed')} disabled={updating} className="btn btn-primary-brand" style={{ flex: 1, borderRadius: '8px' }}>

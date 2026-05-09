@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'sonner';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
@@ -19,7 +19,7 @@ import PatientPortal from './pages/PatientPortal';
 
 const App = () => (
   <Router>
-    <ToastContainer position="top-right" autoClose={3500} hideProgressBar={false} newestOnTop closeOnClick pauseOnHover />
+    <Toaster position="top-right" richColors closeButton duration={3500} />
     <Routes>
       {/* Public */}
       <Route path="/" element={<Home />} />

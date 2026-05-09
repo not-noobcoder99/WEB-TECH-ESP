@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import authService from '../services/authService';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 
 const Login = () => {
   const { login } = useAuth();
@@ -51,7 +51,7 @@ const Login = () => {
         <div style={{ position: 'absolute', bottom: '-80px', left: '-40px', width: '250px', height: '250px', borderRadius: '50%', background: 'rgba(20,184,166,0.1)' }} />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', marginBottom: '3rem' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem' }}>🫀</div>
+            <div style={{ width: 40, height: 40, borderRadius: '12px', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem' }}>ðŸ«€</div>
             <span style={{ color: 'white', fontWeight: 800, fontSize: '1.25rem', fontFamily: 'var(--font-serif)' }}>CardioSentinel</span>
           </Link>
           <h2 style={{ color: 'white', fontSize: '2rem', marginBottom: '1rem', lineHeight: 1.3 }}>AI-Powered Cardiac<br />Risk Monitoring</h2>
@@ -75,13 +75,13 @@ const Login = () => {
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
         <div style={{ width: '100%', maxWidth: '460px' }}>
           <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none', marginBottom: '2rem' }} className="d-lg-none">
-            <span style={{ fontSize: '1.5rem' }}>🫀</span>
+            <span style={{ fontSize: '1.5rem' }}>ðŸ«€</span>
             <span style={{ color: '#0f4c81', fontWeight: 800, fontFamily: 'var(--font-serif)' }}>CardioSentinel</span>
           </Link>
 
           {/* Mode switcher */}
           <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem' }}>
-            {[['patient', '🧑‍⚕️ Patient Portal'], ['staff', '🏥 Clinical Staff']].map(([m, label]) => (
+            {[['patient', 'ðŸ§‘â€âš•ï¸ Patient Portal'], ['staff', 'ðŸ¥ Clinical Staff']].map(([m, label]) => (
               <button key={m} onClick={() => { setMode(m); setTab('login'); }}
                 style={{ flex: 1, padding: '0.75rem', borderRadius: '12px', border: `2px solid ${mode === m ? '#0f4c81' : '#d6e3ee'}`, fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', background: mode === m ? '#0f4c81' : 'white', color: mode === m ? 'white' : '#6b7280', transition: 'all 0.2s' }}>
                 {label}
@@ -113,10 +113,10 @@ const Login = () => {
                   </div>
                   <div className="mb-4">
                     <label className="form-label">Password</label>
-                    <input type="password" className="form-control" placeholder="••••••••" value={loginForm.password} onChange={e => setL('password', e.target.value)} required />
+                    <input type="password" className="form-control" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={loginForm.password} onChange={e => setL('password', e.target.value)} required />
                   </div>
                   <button type="submit" className="btn btn-primary-brand w-100" disabled={loading} style={{ borderRadius: '10px', padding: '0.85rem' }}>
-                    {loading ? 'Signing in…' : 'Sign In →'}
+                    {loading ? 'Signing inâ€¦' : 'Sign In â†’'}
                   </button>
                 </form>
               )}
@@ -157,7 +157,7 @@ const Login = () => {
                     </div>
                   </div>
                   <button type="submit" className="btn btn-primary-brand w-100 mt-4" disabled={loading} style={{ borderRadius: '10px', padding: '0.85rem' }}>
-                    {loading ? 'Creating account…' : 'Create Account →'}
+                    {loading ? 'Creating accountâ€¦' : 'Create Account â†’'}
                   </button>
                   <p style={{ fontSize: '0.75rem', color: '#9ca3af', textAlign: 'center', marginTop: '0.75rem', marginBottom: 0 }}>
                     You can add detailed clinical values after registration.
@@ -181,10 +181,10 @@ const Login = () => {
                 </div>
                 <div className="mb-4">
                   <label className="form-label">Password</label>
-                  <input type="password" className="form-control" placeholder="••••••••" value={loginForm.password} onChange={e => setL('password', e.target.value)} required />
+                  <input type="password" className="form-control" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" value={loginForm.password} onChange={e => setL('password', e.target.value)} required />
                 </div>
                 <button type="submit" className="btn btn-primary-brand w-100" disabled={loading} style={{ borderRadius: '10px', padding: '0.85rem' }}>
-                  {loading ? 'Signing in…' : 'Sign In →'}
+                  {loading ? 'Signing inâ€¦' : 'Sign In â†’'}
                 </button>
               </form>
             </>

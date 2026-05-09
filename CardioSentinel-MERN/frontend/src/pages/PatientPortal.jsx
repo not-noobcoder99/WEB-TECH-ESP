@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/apiClient';
 
@@ -132,13 +134,27 @@ const PatientPortal = () => {
         {/* Risk summary card */}
         {profile?.patient && (
           <div style={{ background: 'white', borderRadius: '16px', padding: '1.5rem 2rem', marginBottom: '1.5rem', boxShadow: '0 2px 16px rgba(15,76,129,0.08)', borderLeft: `5px solid ${RISK_COLOR[profile.patient.riskLevel] || '#d6e3ee'}` }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-              <div>
-                <div style={{ fontSize: '0.75rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.3rem' }}>Your Current Risk Status</div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+                {profile.patient.lastRiskScore != null && (
+                  <div style={{ width: 80, height: 80, flexShrink: 0 }}>
+                    <CircularProgressbar
+                      value={profile.patient.lastRiskScore * 100}
+                      text={`${(profile.patient.lastRiskScore * 100).toFixed(0)}%`}
+                      styles={buildStyles({
+                        pathColor: RISK_COLOR[profile.patient.riskLevel] || '#10b981',
+                        textColor: RISK_COLOR[profile.patient.riskLevel] || '#10b981',
+                        trailColor: '#f3f4f6',
+                        textSize: '22px',
+                      })}
+                    />
+                  </div>
+                )}
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.3rem' }}>Your Current Risk Status</div>
                   <RiskBadge level={profile.patient.riskLevel || 'low'} score={profile.patient.lastRiskScore} />
                   {profile.patient.lastUpdated && (
-                    <span style={{ fontSize: '0.8rem', color: '#9ca3af' }}>Last updated {new Date(profile.patient.lastUpdated).toLocaleDateString()}</span>
+                    <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginTop: '0.35rem' }}>Last updated {new Date(profile.patient.lastUpdated).toLocaleDateString()}</div>
                   )}
                 </div>
               </div>
