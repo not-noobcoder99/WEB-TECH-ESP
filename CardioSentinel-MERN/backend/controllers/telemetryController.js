@@ -64,7 +64,7 @@ const createTelemetry = async (req, res, next) => {
 
       // Auto-alert on high risk
       if (prediction.riskLevel === 'high' && !prediction.error) {
-        await Alert.create({
+        const newAlert = await Alert.create({
           patientId,
           telemetryId: telemetry._id,
           alertType: 'urgent',
@@ -75,6 +75,18 @@ const createTelemetry = async (req, res, next) => {
         });
         aiPrediction.triggeredAlert = true;
         alertCreated = true;
+
+        // Push real-time alert to all connected clients
+        const io = req.app.get('io');
+        if (io) {
+          io.emit('new-alert', {
+            _id: newAlert._id,
+            patientId: { _id: patientId, name: patient.name, patientId: patient.patientId },
+            alertType: 'urgent',
+            riskScore: prediction.riskScore,
+            createdAt: newAlert.createdAt,
+          });
+        }
       }
 
       await Telemetry.findByIdAndUpdate(telemetry._id, { aiPrediction });
