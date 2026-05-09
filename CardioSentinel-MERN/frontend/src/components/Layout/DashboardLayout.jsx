@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import ChatBot from '../UI/ChatBot';
 import apiClient from '../../services/apiClient';
+import socketService from '../../services/socketService';
 
 const Icon = ({ d, size = 20 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -37,17 +39,28 @@ const DashboardLayout = ({ children, title, patientContext }) => {
   const handleLogout = () => { logout(); navigate('/'); };
   const sidebarW = collapsed ? '68px' : '252px';
 
-  // Poll pending alerts every 60s for notification bell
+  // Load initial pending alerts + listen for real-time new-alert events via Socket.io
   useEffect(() => {
     const fetchPending = async () => {
       try {
         const { data } = await apiClient.get('/api/alerts', { params: { status: 'pending', limit: 5 } });
         setPendingAlerts(data.alerts || []);
-      } catch (err) { console.warn('Notification bell poll failed:', err.message); }
+      } catch (err) { console.warn('Notification bell fetch failed:', err.message); }
     };
     fetchPending();
-    const interval = setInterval(fetchPending, 60000);
-    return () => clearInterval(interval);
+
+    const socket = socketService.connect();
+    const handleNewAlert = (alert) => {
+      setPendingAlerts(prev => {
+        const updated = [alert, ...prev];
+        return updated.slice(0, 5);
+      });
+    };
+    socket.on('new-alert', handleNewAlert);
+
+    return () => {
+      socket.off('new-alert', handleNewAlert);
+    };
   }, []);
 
   // Close bell dropdown on outside click
@@ -172,9 +185,15 @@ const DashboardLayout = ({ children, title, patientContext }) => {
         </header>
 
         {/* Content */}
-        <main style={{ flex: 1, padding: '2rem', overflowY: 'auto' }}>
+        <motion.main
+          key={title}
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28, ease: 'easeOut' }}
+          style={{ flex: 1, padding: '2rem', overflowY: 'auto' }}
+        >
           {children}
-        </main>
+        </motion.main>
       </div>
 
       {/* Floating Chatbot */}
