@@ -3,25 +3,43 @@
 
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const morgan = require('morgan');
 
 const app = express();
+const server = http.createServer(app);
 
 // =====================
 // MIDDLEWARE SETUP
 // =====================
 
-app.use(morgan('dev'));
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+const corsOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
+  : ['http://localhost:3000'];
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN
-    ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
-    : 'http://localhost:3000',
+  origin: corsOrigins,
   credentials: true,
   optionsSuccessStatus: 200,
 }));
+
+// Socket.io with matching CORS
+const io = new Server(server, {
+  cors: { origin: corsOrigins, credentials: true }
+});
+
+// Make io accessible in controllers via req.app.get('io')
+app.set('io', io);
+
+io.on('connection', (socket) => {
+  console.log(`Socket connected: ${socket.id}`);
+  socket.on('disconnect', () => console.log(`Socket disconnected: ${socket.id}`));
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -108,7 +126,7 @@ const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`CardioSentinel Backend running on http://localhost:${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV}`);
   });
@@ -116,4 +134,4 @@ const startServer = async () => {
 
 startServer();
 
-module.exports = app;
+module.exports = { app, io };

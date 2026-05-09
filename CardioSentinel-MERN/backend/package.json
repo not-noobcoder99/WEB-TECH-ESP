@@ -17,6 +17,9 @@
   ],
   "author": "UMAR TANVEER",
   "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "axios": "^1.4.0",
@@ -28,7 +31,8 @@
     "express-validator": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.4.3",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
