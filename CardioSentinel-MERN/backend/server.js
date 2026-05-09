@@ -52,6 +52,7 @@ app.use('/api/predictions', require('./routes/predictionRoutes'));
 app.use('/api/tickets', require('./routes/ticketRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/chat', require('./routes/chatRoutes'));
+app.use('/api/patient-portal', require('./routes/patientPortalRoutes'));
 
 // =====================
 // HEALTH CHECK
