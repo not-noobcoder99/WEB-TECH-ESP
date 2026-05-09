@@ -33,11 +33,12 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['clinician', 'nurse', 'admin'],
-      default: 'clinician'
+      enum: ['patient', 'clinician', 'nurse', 'admin'],
+      default: 'patient'
     },
     department: String,
     phone: String,
+    dateOfBirth: Date,
     isActive: {
       type: Boolean,
       default: true

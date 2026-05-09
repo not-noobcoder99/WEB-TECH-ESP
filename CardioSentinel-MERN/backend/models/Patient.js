@@ -9,7 +9,11 @@ const patientSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      // Format: CS-XXXX (e.g., CS-0001)
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      index: true,
     },
     name: {
       type: String,
