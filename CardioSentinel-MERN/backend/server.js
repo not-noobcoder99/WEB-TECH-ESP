@@ -20,7 +20,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 const corsOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(o => o.trim())
-  : ['http://localhost:3000'];
+  : ['https://cardiosentinel-ten.vercel.app', 'http://localhost:3000'];
 
 app.use(cors({
   origin: corsOrigins,
