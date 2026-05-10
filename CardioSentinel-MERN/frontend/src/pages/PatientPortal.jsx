@@ -5,6 +5,7 @@ import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../services/apiClient';
+import ChatBot from '../components/UI/ChatBot';
 
 const FEATURES = [
   { key: 'age',      label: 'Age',                    unit: 'years',   min: 1,   max: 120, step: 1,    hint: 'Your age' },
@@ -402,6 +403,7 @@ const PatientPortal = () => {
           </>
         )}
       </div>
+      <ChatBot />
     </div>
   );
 };
