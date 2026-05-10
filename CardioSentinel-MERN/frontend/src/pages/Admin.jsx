@@ -116,7 +116,7 @@ const Admin = () => {
             <div className="content-card" style={{ overflowX: 'auto' }}>
               {tickets.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>ðŸ“­</div>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🔭</div>
                   <div>No support tickets yet</div>
                 </div>
               ) : (
@@ -162,7 +162,7 @@ const Admin = () => {
             <div className="content-card" style={{ overflowX: 'auto' }}>
               {users.filter(u => u.role !== 'patient').length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>ðŸ‘¥</div>
+                  <div style={{ fontSize: ‘2.5rem’, marginBottom: ‘0.75rem’ }}>👥</div>
                   <div>No users found</div>
                 </div>
               ) : (
@@ -197,7 +197,7 @@ const Admin = () => {
                             <option value="admin">Admin</option>
                           </select>
                         </td>
-                        <td style={{ fontSize: '0.85rem', color: '#6b7280' }}>{u.department || 'â€”'}</td>
+                        <td style={{ fontSize: '0.85rem', color: '#6b7280' }}>{u.department || '—'}</td>
                         <td style={{ color: '#9ca3af', fontSize: '0.8rem' }}>{new Date(u.createdAt).toLocaleDateString()}</td>
                         <td>
                           <span style={{ background: u.isActive ? '#d1fae5' : '#fee2e2', color: u.isActive ? '#065f46' : '#991b1b', padding: '0.2rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 600 }}>
@@ -259,7 +259,7 @@ const Admin = () => {
                   </div>
                 </div>
                 <button type="submit" className="btn btn-primary-brand w-100 mt-4" disabled={creating} style={{ borderRadius: '10px', padding: '0.85rem' }}>
-                  {creating ? 'Creating accountâ€¦' : 'Create Staff Account â†’'}
+                  {creating ? ‘Creating account…’ : ‘Create Staff Account →’}
                 </button>
               </form>
             </div>
@@ -268,8 +268,8 @@ const Admin = () => {
           {tab === 'system' && (
             <div className="row g-4">
               {[
-                { title: 'Backend API', items: [['Status', 'â— Running'], ['Port', '5000'], ['Auth', 'JWT (7d expiry)'], ['Routes', '7 groups, 30+ endpoints']] },
-                { title: 'AI Service', items: [['Status', 'â— Running'], ['Port', '8000'], ['Model', 'LogisticRegression_C1'], ['Features', '13 clinical']] },
+                { title: 'Backend API', items: [['Status', '● Running'], ['Port', '5000'], ['Auth', 'JWT (7d expiry)'], ['Routes', '7 groups, 30+ endpoints']] },
+                { title: 'AI Service', items: [['Status', '● Running'], ['Port', '8000'], ['Model', 'LogisticRegression_C1'], ['Features', '13 clinical']] },
                 { title: 'Database', items: [['Engine', 'MongoDB'], ['Collections', '5'], ['ORM', 'Mongoose'], ['Auth', 'Connection string in .env']] },
               ].map(s => (
                 <div className="col-md-4" key={s.title}>
@@ -278,7 +278,7 @@ const Admin = () => {
                     {s.items.map(([k, v]) => (
                       <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0', borderBottom: '1px solid #f3f4f6', fontSize: '0.85rem' }}>
                         <span style={{ color: '#6b7280' }}>{k}</span>
-                        <span style={{ fontWeight: 600, color: v.startsWith('â—') ? '#10b981' : '#0f4c81' }}>{v}</span>
+                        <span style={{ fontWeight: 600, color: v.startsWith('●') ? '#10b981' : '#0f4c81' }}>{v}</span>
                       </div>
                     ))}
                   </div>
