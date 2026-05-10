@@ -48,7 +48,7 @@ const sendMessage = async (req, res, next) => {
       return res.status(503).json({ message: 'Gemini API key not configured. Add GEMINI_API_KEY to backend/.env' });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const systemWithContext = SYSTEM_PROMPT + buildContextBlock(patientContext);
 
