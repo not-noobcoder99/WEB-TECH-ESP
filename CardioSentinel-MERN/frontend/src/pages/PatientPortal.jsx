@@ -23,8 +23,8 @@ const FEATURES = [
   { key: 'thal',     label: 'Thalassemia',             unit: '',        min: 0,   max: 3,   step: 1,    hint: '1=Normal, 2=Fixed defect, 3=Reversable defect', select: [{ value: '1', label: 'Normal' }, { value: '2', label: 'Fixed Defect' }, { value: '3', label: 'Reversable Defect' }] },
 ];
 
-const RISK_COLOR = { low: '#10b981', medium: '#f59e0b', high: '#ef4444' };
-const RISK_BG = { low: '#d1fae5', medium: '#fef3c7', high: '#fee2e2' };
+const RISK_COLOR = { low: '#10b981', medium: '#f59e0b', moderate: '#f59e0b', high: '#ef4444' };
+const RISK_BG = { low: '#d1fae5', medium: '#fef3c7', moderate: '#fef3c7', high: '#fee2e2' };
 
 const defaultForm = () => Object.fromEntries(FEATURES.map(f => [f.key, f.select ? f.select[0].value : '']));
 
@@ -105,7 +105,7 @@ const PatientPortal = () => {
 
   const RiskBadge = ({ level, score }) => (
     <span style={{ background: RISK_BG[level] || '#f3f4f6', color: RISK_COLOR[level] || '#6b7280', padding: '0.3rem 0.85rem', borderRadius: '20px', fontWeight: 700, fontSize: '0.875rem' }}>
-      {level === 'high' ? '⚠ HIGH RISK' : level === 'medium' ? '◆ MODERATE' : '✓ LOW RISK'}
+      {level === 'high' ? '⚠ HIGH RISK' : (level === 'medium' || level === 'moderate') ? '◆ MODERATE' : '✓ LOW RISK'}
       {score !== undefined && ` — ${(score * 100).toFixed(0)}%`}
     </span>
   );
@@ -240,7 +240,7 @@ const PatientPortal = () => {
                       It ranges from 0–100%, where higher values indicate greater likelihood of cardiac disease.
                     </p>
                     <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                      {[['Low', '< 30%', '#10b981'], ['Medium', '30–60%', '#f59e0b'], ['High', '> 60%', '#ef4444']].map(([l, r, c]) => (
+                      {[['Low', '< 40%', '#10b981'], ['Medium', '40–70%', '#f59e0b'], ['High', '> 70%', '#ef4444']].map(([l, r, c]) => (
                         <div key={l} style={{ textAlign: 'center' }}>
                           <div style={{ color: c, fontWeight: 800, fontSize: '0.85rem' }}>{l}</div>
                           <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.7rem' }}>{r}</div>
