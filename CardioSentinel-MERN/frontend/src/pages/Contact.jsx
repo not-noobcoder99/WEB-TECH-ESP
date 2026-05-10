@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import Navbar from '../components/Layout/Navbar';
 import ticketService from '../services/ticketService';
 import { toast } from 'sonner';
@@ -50,10 +50,10 @@ const Contact = () => {
             <div className="col-lg-4">
               <h4 style={{ color: '#0f2840', marginBottom: '1.5rem' }}>Support Channels</h4>
               {[
-                { emoji: 'ðŸ¥', title: 'Clinical Support', desc: 'Patient monitoring, alerts, and clinical workflow queries' },
-                { emoji: 'ðŸ“¡', title: 'Telemetry Issues', desc: 'Device connectivity, data sync, and reading accuracy' },
-                { emoji: 'ðŸ¤–', title: 'AI Model Questions', desc: 'Prediction accuracy, risk scores, and feature interpretation' },
-                { emoji: 'ðŸ”¬', title: 'Research', desc: 'Dataset access, model details, and academic collaboration' },
+                { emoji: '', title: 'Clinical Support', desc: 'Patient monitoring, alerts, and clinical workflow queries' },
+                { emoji: '', title: 'Telemetry Issues', desc: 'Device connectivity, data sync, and reading accuracy' },
+                { emoji: '', title: 'AI Model Questions', desc: 'Prediction accuracy, risk scores, and feature interpretation' },
+                { emoji: '', title: 'Research', desc: 'Dataset access, model details, and academic collaboration' },
               ].map(s => (
                 <div key={s.title} style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
                   <div style={{ fontSize: '1.75rem', flexShrink: 0 }}>{s.emoji}</div>
@@ -74,7 +74,7 @@ const Contact = () => {
             <div className="col-lg-8">
               {submitted ? (
                 <div style={{ textAlign: 'center', padding: '4rem 2rem', background: '#f0fdf4', borderRadius: '16px', border: '1px solid #d1fae5' }}>
-                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>âœ…</div>
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}></div>
                   <h3 style={{ color: '#065f46' }}>Ticket Submitted!</h3>
                   <p style={{ color: '#059669', marginBottom: '1.5rem' }}>Your support ticket has been received. Our clinical team will respond within 24 hours.</p>
                   <button className="btn btn-primary-brand" onClick={() => { setSubmitted(false); setForm({ name: '', email: '', ticketType: 'general', subject: '', message: '', priority: 'medium' }); }}>
@@ -113,12 +113,12 @@ const Contact = () => {
                     </div>
                     <div className="col-12">
                       <label className="form-label">Message *</label>
-                      <textarea className="form-control" rows={5} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required minLength={10} placeholder="Describe your question or issue in detailâ€¦" style={{ resize: 'vertical' }} />
+                      <textarea className="form-control" rows={5} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} required minLength={10} placeholder="Describe your question or issue in detail..." style={{ resize: 'vertical' }} />
                     </div>
                   </div>
                   <div className="mt-4 d-flex gap-3 align-items-center">
                     <button type="submit" className="btn btn-primary-brand" disabled={loading} style={{ borderRadius: '8px', padding: '0.85rem 2rem', fontSize: '1rem' }}>
-                      {loading ? 'Submittingâ€¦' : 'Submit Ticket â†’'}
+                      {loading ? 'Submitting...' : 'Submit Ticket ->'}
                     </button>
                     <span style={{ color: '#9ca3af', fontSize: '0.8rem' }}>* Required fields</span>
                   </div>
