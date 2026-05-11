@@ -33,8 +33,8 @@ const patientSchema = new mongoose.Schema(
     email: String,
     phone: String,
     medicalHistory: String,
-    
-    // Clinical baseline features (for AI model input)
+
+    // Clinical baseline features for AI model input
     cp: {
       type: Number,
       description: 'Chest pain type (0-3)'
@@ -79,7 +79,7 @@ const patientSchema = new mongoose.Schema(
       type: Number,
       description: 'Thalassemia type'
     },
-    
+
     // AI Risk Assessment
     riskLevel: {
       type: String,
@@ -91,7 +91,7 @@ const patientSchema = new mongoose.Schema(
       min: 0,
       max: 1
     },
-    
+
     // Enrollment Information
     assignedClinician: {
       type: mongoose.Schema.Types.ObjectId,

@@ -12,10 +12,10 @@ const connectDB = async () => {
       socketTimeoutMS: 45000,
     });
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    console.error(`❌ Database Connection Error: ${error.message}`);
+    console.error(` Database Connection Error: ${error.message}`);
     process.exit(1);
   }
 };

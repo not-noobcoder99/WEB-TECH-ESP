@@ -10,7 +10,7 @@ const telemetrySchema = new mongoose.Schema(
       ref: 'Patient',
       required: true
     },
-    
+
     // Vital Signs
     heartRate: {
       type: Number,
@@ -41,7 +41,7 @@ const telemetrySchema = new mongoose.Schema(
       max: 100
     },
     temperature: Number,
-    
+
     // Signal Quality
     signalQuality: {
       type: Number,
@@ -50,8 +50,8 @@ const telemetrySchema = new mongoose.Schema(
       default: 100
     },
     deviceType: String,
-    
-    // AI Prediction Result (auto-populated)
+
+    // AI Prediction Result 
     aiPrediction: {
       riskScore: {
         type: Number,
@@ -73,7 +73,7 @@ const telemetrySchema = new mongoose.Schema(
       },
       triggeredAlert: Boolean
     },
-    
+
     // Timestamps
     readingTimestamp: {
       type: Date,
