@@ -2,10 +2,16 @@ const Patient = require('../models/Patient');
 
 // Generate next patientId in CS-XXXX format
 const generatePatientId = async () => {
-  const last = await Patient.findOne().sort({ createdAt: -1 }).select('patientId');
-  if (!last || !last.patientId) return 'CS-0001';
-  const num = parseInt(last.patientId.split('-')[1], 10) + 1;
-  return `CS-${String(num).padStart(4, '0')}`;
+  const patients = await Patient.find().select('patientId');
+  if (!patients.length) return 'CS-0001';
+  
+  const maxNum = patients.reduce((max, p) => {
+    if (!p.patientId) return max;
+    const num = parseInt(p.patientId.split('-')[1], 10);
+    return isNaN(num) ? max : Math.max(max, num);
+  }, 0);
+  
+  return `CS-${String(maxNum + 1).padStart(4, '0')}`;
 };
 
 // GET /api/patients
