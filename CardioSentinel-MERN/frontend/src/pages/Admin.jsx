@@ -162,7 +162,7 @@ const Admin = () => {
             <div className="content-card" style={{ overflowX: 'auto' }}>
               {users.filter(u => u.role !== 'patient').length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '4rem', color: '#9ca3af' }}>
-                  <div style={{ fontSize: ‘2.5rem’, marginBottom: ‘0.75rem’ }}>👥</div>
+                  <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>👥</div>
                   <div>No users found</div>
                 </div>
               ) : (
@@ -259,7 +259,7 @@ const Admin = () => {
                   </div>
                 </div>
                 <button type="submit" className="btn btn-primary-brand w-100 mt-4" disabled={creating} style={{ borderRadius: '10px', padding: '0.85rem' }}>
-                  {creating ? ‘Creating account…’ : ‘Create Staff Account →’}
+                  {creating ? 'Creating account…' : 'Create Staff Account →'}
                 </button>
               </form>
             </div>
