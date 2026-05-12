@@ -372,7 +372,4 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Built for**: CS Web Technologies + CS AI Programming  
-**Institution**: NUST SEECS  
-**Year**: 2024  
-**Status**: Production-ready
+
